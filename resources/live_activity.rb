@@ -16,11 +16,14 @@
 # limitations under the License.
 #
 
-actions :upload
-default_action :upload
+actions :create
+default_action :create
 
-attribute :url, :kind_of => String #URL to http(s) containing zip archive with an activity
 attribute :name, :kind_of => String, :name_attribute => true
-attribute :version, :kind_of => String
+attribute :activity_name, :kind_of => String
+attribute :controller_name, :kind_of => String
+attribute :description, :kind_of => String
+attribute :metadata, :kind_of => Hash
 
 attr_accessor :exists
+attr_accessor :metadata_up_to_date

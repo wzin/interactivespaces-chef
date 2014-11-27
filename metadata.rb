@@ -7,3 +7,4 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "1.6.2"
 
 depends "java"
+depends "python"

@@ -20,57 +20,56 @@ def whyrun_supported?
   true
 end
 
-action :upload do
+action :create do
   if @current_resource.exists
-    Chef::Log.debug "Activity #{@new_resource} already exists - nothing to do"
+    Chef::Log.debug "Controller #{@new_resource.name} already exists - nothing to do"
   else
-    converge_by("Create #{@new_resource}") do
-      upload_activity
+    converge_by("Create #{@new_resource.name}/#{@new_resource.hostid}") do
+      create_controller
     end
   end
 end
 
 
 def load_current_resource
-  @current_resource = Chef::Resource::InteractivespacesActivity.new(@new_resource.name)
+  @current_resource = Chef::Resource::InteractivespacesController.new(@new_resource.name)
   @current_resource.name(@new_resource.name)
-  @current_resource.url(@new_resource.url)
-  @current_resource.version(@new_resource.version)
+  @current_resource.hostid(@new_resource.hostid)
+  @current_resource.description(@new_resource.description)
 
-  if activity_exists?
+  if controller_exists?
     @current_resource.exists = true
   end
 end
 
 private
 
-def upload_activity
-    cmdstr="python /home/galadmin/src/interactivespaces-python-api/scripts/manage_activity.py --config=/home/galadmin/etc/ispaces-client.conf --action=upload --url=#{new_resource.url}"
-    Chef::Log.debug "Running activity upload command #{cmdstr}"
+def create_controller
+    cmdstr="python /home/galadmin/src/interactivespaces-python-api/scripts/manage_controller.py \
+              --config=/home/galadmin/etc/ispaces-client.conf \
+              --action=create \
+              --name=#{@new_resource.name} \
+              --hostid=#{@new_resource.hostid} \
+              --description='#{@new_resource.description}' "
+    Chef::Log.debug "Running controller creation command #{cmdstr}"
     cmd = Mixlib::ShellOut.new(cmdstr)
     cmd.run_command
     Chef::Log.debug "CMD stdout: #{cmd.stdout}"
     if cmd.stdout.strip == "True"
-      Chef::Log.debug "Uploaded activity: #{cmd.stdout}"
+      Chef::Log.debug "Created controller: #{cmd.stdout}"
       new_resource.updated_by_last_action(true)
     else
-      Chef::Log.debug "Could not upload activity: #{cmd.stdout}"
+      Chef::Log.debug "Could not create controller: #{cmd.stdout}"
     end
 end
 
 private
 
-def activity_exists?
-  Chef::Log.debug "Checking to see if activity name '#{new_resource.name} / #{new_resource.version}' exists"
-  if new_resource.version
-    version = "--version='#{version}'"
-  end
-
-  cmdstr="python /home/galadmin/src/interactivespaces-python-api/scripts/manage_activity.py  --config=/home/galadmin/etc/ispaces-client.conf --action=exists --name='#{new_resource.name}' #{version}"
+def controller_exists?
+  cmdstr="python /home/galadmin/src/interactivespaces-python-api/scripts/manage_controller.py --config=/home/galadmin/etc/ispaces-client.conf --action=exists --name=#{new_resource.name} --hostid=#{new_resource.hostid}"
   cmd = Mixlib::ShellOut.new(cmdstr)
   cmd.environment['HOME'] = ENV.fetch('HOME', '/home/galadmin/')
   cmd.run_command
-  Chef::Log.debug "Does the activity_exist? => #{cmd.stdout}"
   if cmd.stdout.strip == 'True'
     return true
   else
