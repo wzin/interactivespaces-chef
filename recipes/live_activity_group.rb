@@ -1,3 +1,11 @@
+# Copyright 2014, End Point Corporation
+# author: Wojciech Ziniewicz <wojtek@endpoint.com>
+#
+# LICENSE needed
+#
+# Creates Interactivespaces live activity groups
+
+
 node[:interactivespaces][:live_activity_groups].each do |live_activity_group_name, live_activity_group_data|
   interactivespaces_live_activity_group live_activity_group_name do
     name live_activity_group_name

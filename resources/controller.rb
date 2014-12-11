@@ -16,11 +16,25 @@
 # limitations under the License.
 #
 
-actions :create
-default_action :create
+actions [:deploy, :rollback]
+default_action :deploy
 
-attribute :hostid, :kind_of => String #URL to http(s) containing zip archive with an activity
-attribute :name, :kind_of => String, :name_attribute => true
-attribute :description, :kind_of => String
+attribute :deploy_to, :kind_of => String, :name_attribute => true, :default => node[:interactivespaces][:controller][:deploy][:deploy_to]
+attribute :version, :kind_of => String, :default => node[:interactivespaces][:version]
+attribute :keep_releases, :kind_of => Integer, :default => 5
+attribute :current_path, :kind_of => String, :default => "#{node[:interactivespaces][:controller][:deploy][:deploy_to]}/current"
+attribute :shared_path, :kind_of => String, :default => "#{node[:interactivespaces][:controller][:deploy][:deploy_to]}/shared"
+attribute :ssh_user, :kind_of => String, :default => "#{node[:interactivespaces][:controller][:deploy][:ssh_user]}"
+attribute :user, :kind_of => String, :default => "#{node[:interactivespaces][:controller][:deploy][:user]}"
+attribute :group, :kind_of => String, :default => "#{node[:interactivespaces][:controller][:deploy][:group]}"
+attribute :symlinks, :kind_of => Array, :default => node[:interactivespaces][:controller][:deploy][:symlinks]
+attribute :restart_command, :kind_of => String, :default => node[:interactivespaces][:controller][:deploy][:restart_cmd]
+attribute :restart_after_deploy, :kind_of => [TrueClass, FalseClass], :default => true
+attribute :tmp_dir, :kind_of => String, :default => node[:interactivespaces][:controller][:deploy][:tmp_dir]
+attribute :rollback_on_error, :kind_of => [TrueClass, FalseClass]
+attribute :host_address, :kind_of => String
+attribute :remote, :kind_of => [TrueClass, FalseClass], :default => true
+attribute :templates_tmp_root, :kind_of => String, :default => node[:interactivespaces][:controller][:deploy][:templates_tmp_root]
+attribute :fail_on_error, :kind_of => [TrueClass, FalseClass], :default => node[:interactivespaces][:controller][:deploy][:fail_on_error]
 
 attr_accessor :exists

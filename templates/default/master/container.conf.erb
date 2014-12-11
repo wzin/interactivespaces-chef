@@ -1,0 +1,8 @@
+org.ros.master.uri=http://<%= node[:interactivespaces][:master][:hostname] %>:11311/
+org.ros.deployment.repository.root=repository/interactivespaces
+
+interactivespaces.config.location=config/interactivespaces
+interactivespaces.host=<%= node[:interactivespaces][:master][:hostname] %>
+interactivespaces.hostid=ISMaster
+interactivespaces.container.type=master
+interactivespaces.network.type=isnetwork

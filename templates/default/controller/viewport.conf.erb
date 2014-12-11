@@ -1,0 +1,9 @@
+<% node[:liquid_galaxy][:display_nodes].each do |display_node| -%>
+  <% display_node[:screens].each do |screen| -%>
+lg.window.viewport.<%= "#{screen[:name]}" %>.rotation=<%= "#{screen[:rotation]}" %>
+lg.window.viewport.<%= "#{screen[:name]}" %>.width=<%= "#{screen[:width]}" %>
+lg.window.viewport.<%= "#{screen[:name]}" %>.height=<%= "#{screen[:height]}" %>
+lg.window.viewport.<%= "#{screen[:name]}" %>.x=<%= "#{screen[:x]}" %>
+lg.window.viewport.<%= "#{screen[:name]}" %>.y=<%= "#{screen[:y]}" %>
+  <% end -%>
+<% end -%>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<AutomatedInstallation langpack="eng">
+<com.izforge.izpack.panels.CheckedHelloPanel id="hellopanel"/>
+<com.izforge.izpack.panels.HTMLInfoPanel id="infopanel"/>
+<com.izforge.izpack.panels.LicencePanel id="UNKNOWN (com.izforge.izpack.panels.LicencePanel)"/>
+<com.izforge.izpack.panels.UserInputPanel id="userinputpanel.order.0">
+<userInput>
+<entry key="interactivespaces.hostid" value="ISMaster"/>
+<entry key="interactivespaces.network.type" value="ispacesnet"/>
+<entry key="interactivespaces.hostname" value="lg-head"/>
+</userInput>
+</com.izforge.izpack.panels.UserInputPanel>
+<com.izforge.izpack.panels.UserInputPanel id="userinputpanel.order.1">
+<userInput>
+<entry key="interactivespaces.master.port" value="11311"/>
+</userInput>
+</com.izforge.izpack.panels.UserInputPanel>
+<com.izforge.izpack.panels.TargetPanel id="UNKNOWN (com.izforge.izpack.panels.TargetPanel)">
+<installpath><%= node[:interactivespaces][:master][:deploy][:tmp_dir]%>/image</installpath>
+</com.izforge.izpack.panels.TargetPanel>
+<com.izforge.izpack.panels.PacksPanel id="UNKNOWN (com.izforge.izpack.panels.PacksPanel)">
+<pack index="0" name="Base" selected="true"/>
+</com.izforge.izpack.panels.PacksPanel>
+<com.izforge.izpack.panels.InstallPanel id="UNKNOWN (com.izforge.izpack.panels.InstallPanel)"/>
+<com.izforge.izpack.panels.FinishPanel id="UNKNOWN (com.izforge.izpack.panels.FinishPanel)"/>
+</AutomatedInstallation>

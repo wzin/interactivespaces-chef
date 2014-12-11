@@ -5,86 +5,64 @@ Chef cookbook for managing [Interactive Spaces](https://github.com/interactivesp
 
 Usage
 =====
-Interactivespaces stack can be defined using
+Interactivespaces stack can be defined using node attributes:
 
 ```json
 "interactivespaces" : {
-  "ispaces_client" : {
-    "relaunch_sequence" : [
-      "SV and Supporting",
-      "GE and Supporting",
-      "LG Web Interface"
-      ]
-  },
-  "master_port": 11311,
-  "master_service_enable" : true,
-  "install_master" : true,
-  "install_controllers" : true,
-  "activities" : {
-    "activity_name" : {
-      "uri" : "http://example.com/fancy.zip",
-      "version " : "1.0.0dev",
+  "deploy" : {
+    "master" : {
+      "version" : "1.6.5",
+      "revision" : "release-1.6.5"
     },
-    "activity_name2" : {
-      "uri" : "http://example.com/fancy.tar.gz or /opt/example/fancy.tar.gz",
-      "version " : "1.0.0dev",
+    "controller" : {
+      "version" : "1.6.5",
+      "revision" : "release-1.6.5"
     }
   },
-  "space_controllers" : {
-    "space_controller_name" : {
-      "name" : "some name",
-      "description" : "some description",
-      "host_id" : "host_id"
-    },
-    "space_controller_name2" : {
-      "name" : "some name",
-      "description" : "some description",
-      "host_id" : "host_id"
-    },
+  "ispaces_client" :  {
+    "relaunch_sequence" : [
+      "Pre-Start",
+    "Google Earth",
+    "Street View",
+    "Liquid Galaxy"
+      ]
+  },
+  "activities" : {
+    "Street View Panorama" : {
+      "url" : "https://galaxy.endpoint.com/interactivespaces/activities/com.endpoint.lg.streetview.pano-1.0.0.dev.zip",
+      "version " : "1.0.0dev"
+    }
   },
   "live_activities" : {
-    "live_activity_name" : {
-      "controller" : "controller_name",
+    "SV Pano on 42-a" : {
+      "controller" : "ISCtl42a",
+      "initial_state" : "deploy - not yet used",
       "description" : "some description",
+      "activity" : "Street View Panorama",
       "metadata" : {
-        "lg.earth.viewSync.horizFov": "29",
-        "lg.earth.viewSync.receive" : "true",
-        "lg.earth.viewSync.yawOffset" : "36"
+        "lg.svpano.some_key": "some_value",
+        "some_other_key" : "some_other_value"
       }
-    },
-    "another_live_activity_name" : {
-      "activity" : "activity_name2",
-      "controller" : "controller_name",
-      "description" : "some description",
-      "metadata" : {
-        "lg.earth.viewSync.horizFov": "29",
-        "lg.earth.viewSync.receive" : "true",
-        "lg.earth.viewSync.yawOffset" : "36"
-      }
-    },
-    "yet_another_live_activity_name" : {
-      "activity" : "activity_name3",
-      "controller" : "controller_name",
-      "description" : "some description",
-      "metadata" : {
-        "key" : "value"
-      }
+    }
+  },
+  "controllers" : {
+    "ISCtl42a" : {
+      "description" : "some fancy controller description",
+      "hostid" : "isctl42a"
     }
   },
   "live_activity_groups" : {
-    "live_activity_group_name" : ["live_activity_name", "another_live_activity_name2" ],
-    "another_live_activity_group_name" : ["yet_another_live_activity_name", "another_live_activity_name" ],
-    "metadata" : {
-      "key" : "value"
-    }
-  },
-  "spaces" : {
-    "space_name" : "some space_name",
-    "live_activity_groups" : ["live_activity_group_name", "another_live_activity_group_name"],
-    "metadata" : {
-      "key" : "value"
+    "live_activity_group_name" : {
+      "live_activities" : [
+      {"live_activity_name" : "SV Pano on 42-a",
+        "space_controller_name" : "ISCtl42a"
+      }
+      ],
+        "metadata" : {
+          "key" : "value"
+        }
     }
   }
-}
-
 ```
+
+or LWRP

@@ -1,7 +1,9 @@
-# Cookbook Name:: interactivespaces
-#
 # Copyright 2014, End Point Corporation
 # author: Wojciech Ziniewicz <wojtek@endpoint.com>
+#
+# LICENSE needed
+#
+# Deploys Interactivespaces API client library and tools
 
 directory "/home/galadmin/tmp/ispaces-client" do
   mode 0755

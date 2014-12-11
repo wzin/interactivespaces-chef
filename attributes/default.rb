@@ -3,9 +3,38 @@
 #Attributes for interactive spaces
 #
 
-is_version = "1.6.2"
-is_install_root = "/opt/interactivespaces"
+# => Master + Controller deployment
+default[:interactivespaces][:version] = "1.7.1"
+default[:interactivespaces][:master][:hostname] = 'lg-head'
+is_version = default[:interactivespaces][:version]
 
+# Master deployment
+default[:interactivespaces][:master][:deploy][:deploy_to] = "/opt/interactivespaces/master"
+default[:interactivespaces][:master][:deploy][:user] = "galadmin"
+default[:interactivespaces][:master][:deploy][:group] = "galadmin"
+default[:interactivespaces][:master][:deploy][:symlinks] = ["logs", "config", "run"]
+default[:interactivespaces][:master][:deploy][:tmp_dir] = "/tmp/ispaces_master_tmp"
+default[:interactivespaces][:master][:deploy][:restart_cmd] = "/home/galadmin/bin/lg-relaunch --full-relaunch --config=/home/galadmin/etc/ispaces-client.conf"
+
+# Controller deployment
+#determines whether chef should throw an error if host, on which controller should be deployed, is offline.
+default[:interactivespaces][:controller][:deploy][:fail_on_error] = false
+default[:interactivespaces][:controller][:deploy][:deploy_to] = "/opt/interactivespaces/controller"
+default[:interactivespaces][:controller][:deploy][:templates_tmp_root] = "/opt/interactivespaces/disp"
+default[:interactivespaces][:controller][:deploy][:ssh_user] = "galadmin"
+default[:interactivespaces][:controller][:deploy][:user] = "lg"
+default[:interactivespaces][:controller][:deploy][:group] = "lg"
+default[:interactivespaces][:controller][:deploy][:symlinks] = ["logs", "config", "run"]
+default[:interactivespaces][:controller][:deploy][:tmp_dir] = "/tmp/ispaces_controller_tmp"
+default[:interactivespaces][:controller][:deploy][:restart_cmd] = "/home/galadmin/bin/lg-relaunch --full-relaunch --config=/home/galadmin/etc/ispaces-client.conf"
+
+is_master_install_root = default[:interactivespaces][:master][:deploy][:deploy_to]
+is_controller_install_root = default[:interactivespaces][:controller][:deploy][:deploy_to]
+
+# => Binary management - controllers and master
+
+# => interactivespaces client configuration
+#
 # we need to have interactivespaces-python-api tagged with version of interactivespaces that it's compatibile with
 # ispaces_client configuration below
 
@@ -22,12 +51,12 @@ default[:interactivespaces][:ispaces_client][:relaunch][:interval_between_attemp
 default[:interactivespaces][:ispaces_client][:relaunch][:relaunch_controllers] = 0 #using 0 || 1 because python/ruby have different bool symbols
 default[:interactivespaces][:ispaces_client][:relaunch][:relaunch_master] = 0
 default[:interactivespaces][:ispaces_client][:ssh_command] = "ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=3"
-default[:interactivespaces][:ispaces_client][:launch_command]="tmux new -s ISController -d '#{is_install_root}/controller/bin/startup_linux.bash'"
-default[:interactivespaces][:ispaces_client][:stop_command]="kill `cat #{is_install_root}/controller/run/interactivespaces.pid`"
-default[:interactivespaces][:ispaces_client][:pid_command]="tmux new -s ISController -d '#{is_install_root}/controller/bin/startup_linux.bash'"
+default[:interactivespaces][:ispaces_client][:launch_command]="tmux new -s ISController -d '#{is_controller_install_root}/current/bin/startup_linux.bash'"
+default[:interactivespaces][:ispaces_client][:stop_command]="kill `cat #{is_controller_install_root}/current/run/interactivespaces.pid`"
+default[:interactivespaces][:ispaces_client][:pid_command]="tmux new -s ISController -d '#{is_controller_install_root}/current/bin/startup_linux.bash'"
 default[:interactivespaces][:ispaces_client][:destroy_tmux_command]='tmux kill-session -t ISController'
-default[:interactivespaces][:ispaces_client][:master_launch_command]="tmux new -s ISMaster -d '#{is_install_root}/master/bin/startup_linux.bash'"
-default[:interactivespaces][:ispaces_client][:master_stop_command]="kill `cat #{is_install_root}/master/run/interactivespaces.pid`"
+default[:interactivespaces][:ispaces_client][:master_launch_command]="tmux new -s ISMaster -d '#{is_master_install_root}/current/bin/startup_linux.bash'"
+default[:interactivespaces][:ispaces_client][:master_stop_command]="kill `cat #{is_master_install_root}/current/run/interactivespaces.pid`"
 default[:interactivespaces][:ispaces_client][:master_destroy_tmux_command]='tmux kill-session -t ISMaster'
 
 # IS Master API attributes below
